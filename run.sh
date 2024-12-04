@@ -1,0 +1,1 @@
+sudo cog run python3.12 predict.py
