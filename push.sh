@@ -1,0 +1,1 @@
+sudo cog push r8.im/qubit999/llama3.2-3b-instruct

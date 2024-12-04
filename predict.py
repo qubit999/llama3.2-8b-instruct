@@ -33,7 +33,7 @@ class Predictor(BasePredictor):
             max_new_tokens=4096,
             pad_token_id=self.pad_token_id,
         )
-        return outputs[0]["generated_text"]
+        return outputs[0]["generated_text"][-1]
 
     def cleanup(self):
         """Cleanup after each prediction to save memory"""
@@ -44,7 +44,7 @@ class Predictor(BasePredictor):
         # Additional cleanup if necessary
 
 if __name__ == "__main__":
-    run_bool = True
+    run_bool = False
     if run_bool:
         predictor = Predictor()
         predictor.setup()
