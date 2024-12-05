@@ -23,15 +23,35 @@ class Predictor(BasePredictor):
     def predict(
         self,
         prompt: str = Input(description="Question", default="Name 3 animals with wings"),
+        system_prompt = Input(description="System prompt", default="You are an AI chatbot."),
+        max_new_tokens: int = Input(description="Maximum number of new tokens to generate", default=4096),
+        min_new_tokens: int = Input(description="Minimum number of new tokens to generate", default=1),
+        temperature: float = Input(description="Sampling temperature", default=0.7),
+        top_p: float = Input(description="Top-p (nucleus) sampling", default=0.9),
+        top_k: int = Input(description="Top-k sampling", default=0),
+        stop_sequences: str = Input(description="Stop sequence", default="<|end_of_text|>,<|eot_id|>"),
+        length_penalty: float = Input(description="Length penalty", default=1.0),
+        presence_penalty: float = Input(description="Presence penalty", default=0.0),
+        repetition_penalty: float = Input(description="Repetition penalty", default=1.0),
+        prompt_template: str = Input(description="Prompt template", default="<|begin_of_text|><|start_header_id|>system<|end_header_id|>{system_prompt}<|eot_id|><|start_header_id|>user<|end_header_id|>{promp}<|eot_id|><|start_header_id|>assistant<|end_header_id|>"),
     ) -> str:        
         messages = [
-            {"role": "system", "content": "You are an AI chatbot."},
+            {"role": "system", "content": system_prompt},
             {"role": "user", "content": prompt},
         ]
         outputs = self.pipe(
             messages,
-            max_new_tokens=4096,
+            max_new_tokens=max_new_tokens,
+            min_new_tokens=min_new_tokens,
             pad_token_id=self.pad_token_id,
+            stop_sequences=stop_sequences,
+            length_penalty=length_penalty,
+            presence_penalty=presence_penalty,
+            temperature=temperature,
+            top_p=top_p,
+            top_k=top_k,
+            repetition_penalty=repetition_penalty,
+            prompt_template=prompt_template,
         )
         return outputs[0]["generated_text"][-1]
 
